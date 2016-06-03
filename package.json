@@ -1,0 +1,53 @@
+{
+  "name": "chiery",
+  "version": "0.0.2",
+  "description": ":four_leaf_clover: Manage dotfiles like collecting clovers",
+  "main": "index.js",
+  "bin": {
+    "chiery": "./bin/chiery.js"
+  },
+  "scripts": {
+    "build": "rm -rf lib && babel src -d lib",
+    "watch": "babel -s -w src -d lib",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublish": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/popkirby/chiery.git"
+  },
+  "author": "popkirby",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/popkirby/chiery/issues"
+  },
+  "homepage": "https://github.com/popkirby/chiery#readme",
+  "devDependencies": {
+    "babel-cli": "^6.9.0",
+    "babel-plugin-syntax-async-functions": "^6.8.0",
+    "babel-plugin-transform-async-to-generator": "^6.8.0",
+    "babel-preset-es2015-node4": "^2.1.0"
+  },
+  "dependencies": {
+    "bluebird": "^3.4.0",
+    "chalk": "^1.1.3",
+    "editor": "^1.0.0",
+    "mkdirp": "^0.5.1",
+    "source-map-support": "^0.4.0",
+    "yargs": "yargs/yargs"
+  },
+  "babel": {
+    "presets": [
+      "babel-preset-es2015-node4"
+    ],
+    "plugins": [
+      "syntax-async-functions",
+      "transform-async-to-generator"
+    ]
+  },
+  "chiery": {
+    "link": {
+      "hoge": "$HOME/.hoge"
+    }
+  }
+}

@@ -1,7 +1,7 @@
 Chiery
 ==========
 
-Manage dotfiles like collecting clovers.
+:four_leaf_clover: Manage dotfiles like collecting clovers.
 
 ### Installation
 
