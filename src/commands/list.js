@@ -1,4 +1,4 @@
-import chieryDir from '../utils/chieryDir'
+import chieryDir from '../utils/chiery-dir'
 import fs from 'fs'
 import path from 'path'
 

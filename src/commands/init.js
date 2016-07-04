@@ -1,41 +1,36 @@
 import chalk from 'chalk'
-import fs from 'fs'
+import chieryDir from '../utils/chiery-dir'
 import log from '../utils/log'
-import mkdirp from 'mkdirp'
 import path from 'path'
 import replaceEnv from '../utils/replace-env'
+import fs from '../utils/fs'
 
-export const command = 'init <scope_name>'
-export const desc = 'Initialize chiery with npm scope name'
-export const builder = {
+export const command = 'init [repo_url]'
+export const desc = 'Initialize chiery'
+export const builder = (yargs) => {
+  return yargs.usage('$0 init [options] [repo_url]')
+    .option('force', {
+      alias: 'f',
+      desc: 'Overwrite $HOME/.chiery',
+      type: 'boolean'
+    })
+    .help()
 }
 
-export const handler = (argv) => {
-  console.log('🍀 ', chalk.green('chiery: start initialize'))
+export const handler = async (argv) => {
+  log.chiery('start initialize')
 
-  const chieryDir = replaceEnv('$HOME/.chiery')
-
-  try {
-    mkdirp.sync(chieryDir)
-  } catch(e) {
-    log.error('an error occured while creating directory', e)
-    return
+  // create $HOME/.chiery
+  if (argv.force) {
+    log.info('overwrite .chiery')
+    await fs.removeAsync(chieryDir)
   }
 
-  log.info('chiery directory created at', chieryDir)
-  log.info('you may want to set $CHIERYDIR to', chieryDir)
+  await fs.copyAsync(
+    path.join(__dirname, '../../templates/.chiery'),
+    chieryDir,
+    { clobber: argv.force }
+  )
 
-  log.info('generating package.json...')
-
-  const scope = argv.scope_name.replace('@', '')
-
-  const packageJson = {
-    'name': `@${scope}/chiery_core`,
-    'version': '0.0.0',
-    'chiery': {
-    }
-  }
-
-  fs.writeFileSync(path.join(chieryDir, 'package.json'), JSON.stringify(packageJson))
-
+  log.info('done.')
 }

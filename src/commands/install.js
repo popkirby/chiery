@@ -1,40 +1,67 @@
-import chalk from 'chalk'
-import chieryDir from '../utils/chieryDir'
-import childProcess from 'child_process'
+import chieryDir from '../utils/chiery-dir'
+import fs from '../utils/fs'
+import Git from 'nodegit'
+import jsonfile from 'jsonfile'
 import log from '../utils/log'
-import replaceEnv from '../utils/replace-env'
+import path from 'path'
+import url from 'url'
 
-export const command = 'install [repo_url]'
+export const command = 'install [clover_url]'
 export const desc = 'Install clovers'
 export const builder = {
 }
 
-export const handler = (argv) => {
-  console.log('🍀 ', chalk.green('chiery: start install'))
-  let command = ''
+export const handler = async (argv) => {
+  if (typeof argv.clover_url === 'undefined') {
+    log.chiery('install all clovers')
+  } else {
+    // install / update one clover 
+    // clone the clover into $CHIERYDIR/clovers
+    installClover(argv.clover_url)
+  }
+}
 
-  if (typeof argv.repo_url === 'undefined') {
-    command = 'npm install'
-  } else  {
-    command = `npm install ${argv.repo_url} --save`
+async function installClover(clover) {
+  // github url -> path
+  log.chiery(`install ${clover}`)
+  const cloverUrl = url.parse(clover)
+  let cloverKey = `${cloverUrl.host}${cloverUrl.path}`
+
+  if (cloverUrl.host === null) {
+    cloverKey = `github.com/${cloverUrl.path}`
+    clover = 'https://' + cloverKey
+  } else if (cloverUrl.host !== 'github.com') {
+    log.error('chiery can only install from github')
+    return
   }
 
-  childProcess.exec(command,
-    {cwd: chieryDir},
-    (err, stdout, stderr) => {
-      if (err) {
-        log.error('an error occured while install', err)
-        log.error('stderr:', stderr)
-        return
-      }
+  const installPath = path.join(chieryDir, 'clovers', cloverKey)
 
-      if (typeof argv.repo_url === 'undefined') {
-        log.info('successfully updated')
-        log.info('stdout:', stdout)
-      } else {
-        log.info('successfully installed', argv.repo_url)
-      }
-    }
-  )
+  try {
+    fs.accessSync(installPath)
+    log.info(`${cloverUrl.path} exists; skipping`)
+    return
+  } catch (e) { /* do nothing */ }
+
+  // clone specified clover from github
+  try {
+    await Git.Clone(clover, installPath)
+  } catch (e) {
+    log.error(`couldn't clone ${clover}; skipping`)
+    return
+  }
+
+  // save to clovers_list
+  const cloversListPath = path.join(chieryDir, './clovers_list.json')
+  const cloversList = jsonfile.readFileSync(cloversListPath)
+
+  cloversList[cloverKey] = {
+    url: clover
+  }
+
+  jsonfile.writeFileSync(cloversListPath, cloversList)
+
+  log.info(`successfully installed ${clover}.`)
+
 }
 

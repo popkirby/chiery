@@ -7,5 +7,9 @@ export default {
 
   error(...args) {
     console.log(chalk.red('[error]'), ...args)
+  },
+
+  chiery(...args) {
+    console.log('🍀 ', chalk.green(args.join(' ')))
   }
 }

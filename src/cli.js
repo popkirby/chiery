@@ -1,11 +1,19 @@
 import yargs from 'yargs'
 import path from 'path'
+import requireDir from 'require-dir'
 
-const argv = yargs.usage('$0 command')
-  .commandDir(path.join(__dirname, 'commands'))
+import 'loud-rejection/register'
+
+const cli = yargs.usage('Usage: $0 <command> [args...]')
   .demand(1)
   .strict()
-  .help()
-  .argv
 
-export default argv
+const commands = requireDir('./commands')
+
+for (let name in commands) {
+  cli.command(commands[name])
+}
+
+cli.help()
+
+export default cli.argv
