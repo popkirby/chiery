@@ -1,8 +1,6 @@
-import chalk from 'chalk'
 import chieryDir from '../utils/chiery-dir'
 import log from '../utils/log'
 import path from 'path'
-import replaceEnv from '../utils/replace-env'
 import fs from '../utils/fs'
 
 export const command = 'init [repo_url]'

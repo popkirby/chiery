@@ -1,5 +1,4 @@
 import yargs from 'yargs'
-import path from 'path'
 import requireDir from 'require-dir'
 
 import 'loud-rejection/register'
