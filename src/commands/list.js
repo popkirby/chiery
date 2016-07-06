@@ -1,5 +1,5 @@
 import chieryDir from '../utils/chiery-dir'
-import fs from 'fs'
+import jsonfile from 'jsonfile'
 import path from 'path'
 
 export const command = 'list'
@@ -8,8 +8,8 @@ export const builder = {
 }
 
 export const handler = () => {
-  const packageJson = JSON.parse(fs.readFileSync(path.join(chieryDir, 'package.json')))
-  const config = packageJson.dependencies
-
-  console.info(Object.keys(config).join('\n'))
+  const cloversListPath = path.join(chieryDir, './clovers_list.json')
+  const cloversList = jsonfile.readFileSync(cloversListPath)
+ 
+  console.log(Object.keys(cloversList).join('\n'))
 } 

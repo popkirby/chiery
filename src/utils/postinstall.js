@@ -1,3 +1,4 @@
+import child_process from 'child_process'
 import fs from './fs'
 import jsonfile from 'jsonfile'
 import log from './log'
@@ -21,7 +22,9 @@ async function postInstall(cloverPath) {
   // exec postinstall hook
   if ('postinstall' in cloverfile) {
     for (const script of cloverfile.postinstall) {
-      // TODO: execute postinstall script
+      child_process.execSync(script, {
+        cwd: cloverPath
+      })
     }
   }
 
