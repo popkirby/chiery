@@ -1,6 +1,6 @@
 {
   "name": "chiery",
-  "version": "0.0.2",
+  "version": "1.0.0-alpha.1",
   "description": ":four_leaf_clover: Manage dotfiles like collecting clovers",
   "main": "index.js",
   "bin": {
