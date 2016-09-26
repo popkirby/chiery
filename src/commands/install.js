@@ -1,6 +1,6 @@
 import chieryDir from '../utils/chiery-dir'
+import child_process from 'child_process'
 import fs from '../utils/fs'
-import Git from 'nodegit'
 import jsonfile from 'jsonfile'
 import log from '../utils/log'
 import path from 'path'
@@ -14,13 +14,13 @@ export const builder = {
 }
 
 export const handler = async (argv) => {
-  if (typeof argv.clover_url === 'undefined') {
+  if (typeof argv._[0] === 'undefined') {
     log.chiery('install all clovers')
     installAllClovers()
   } else {
     // install / update one clover 
     // clone the clover into $CHIERYDIR/clovers
-    installClover(argv.clover_url)
+    installClover(argv._[0])
   }
 }
 
@@ -56,13 +56,16 @@ async function installClover(clover) {
 
   try {
     fs.accessSync(installPath)
-    log.info(`${installPath} exists; skipping`)
+    log.info(`${installPath} exists; update`)
+    child_process.spawnSync('git', ['pull'], {cwd: installPath})
     return
   } catch (e) { /* do nothing */ }
 
   // clone specified clover from github
   try {
-    await Git.Clone(clover, installPath)
+    log.info('cloning clover...')
+    // await Git.Clone(clover, installPath)
+    child_process.spawnSync('git', ['clone', clover, installPath])
   } catch (e) {
     log.error(`couldn't clone ${clover}; skipping`)
     return

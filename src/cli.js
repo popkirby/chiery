@@ -1,18 +1,23 @@
-import yargs from 'yargs'
-import requireDir from 'require-dir'
-
+import Parser from './utils/parser'
 import 'loud-rejection/register'
-
-const cli = yargs.usage('Usage: $0 <command> [args...]')
-  .demand(1)
-  .strict()
+import requireDir from 'require-dir'
 
 const commands = requireDir('./commands')
 
-for (let name in commands) {
-  cli.command(commands[name])
-}
+const subcommands = [
+  ...Object.keys(commands)
+]
 
-cli.help()
+const parser = new Parser(subcommands)
 
-export default cli.argv
+parser.on('command', (data) => {
+  const subcommand = data[0]
+  const args = data[1]
+  commands[subcommand].handler(args)
+})
+
+parser.on('default', (data) => {
+  console.log('help')
+})
+
+parser.parse(process.argv.slice(2))

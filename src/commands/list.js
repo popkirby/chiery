@@ -7,7 +7,7 @@ export const desc = 'List clovers'
 export const builder = {
 }
 
-export const handler = () => {
+export const handler = (args) => {
   const cloversListPath = path.join(chieryDir, './clovers_list.json')
   const cloversList = jsonfile.readFileSync(cloversListPath)
  

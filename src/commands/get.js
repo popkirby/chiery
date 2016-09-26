@@ -6,7 +6,7 @@ export const builder = {
 }
 
 export const handler = (argv) => {
-  const cloverPath = getClover(argv.clover_name)
+  const cloverPath = getClover(argv._[0])
 
   if (typeof cloverPath !== 'undefined') {
     console.log(cloverPath)

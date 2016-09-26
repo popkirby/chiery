@@ -35,10 +35,9 @@
     "fs-extra": "^0.30.0",
     "jsonfile": "^2.3.1",
     "loud-rejection": "^1.6.0",
-    "nodegit": "^0.14.1",
+    "minimist": "^1.2.0",
     "require-dir": "^0.3.0",
-    "source-map-support": "^0.4.0",
-    "yargs": "^4.7.1"
+    "source-map-support": "^0.4.0"
   },
   "babel": {
     "presets": [

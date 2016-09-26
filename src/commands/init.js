@@ -5,21 +5,14 @@ import fs from '../utils/fs'
 
 export const command = 'init [repo_url]'
 export const desc = 'Initialize chiery'
-export const builder = (yargs) => {
-  return yargs.usage('$0 init [options] [repo_url]')
-    .option('force', {
-      alias: 'f',
-      desc: 'Overwrite $HOME/.chiery',
-      type: 'boolean'
-    })
-    .help()
-}
 
 export const handler = async (argv) => {
   log.chiery('start initialize')
 
+  const force = argv.f || argv.force 
+
   // create $HOME/.chiery
-  if (argv.force) {
+  if (force) {
     log.info('overwrite .chiery')
     await fs.removeAsync(chieryDir)
   }
@@ -27,7 +20,7 @@ export const handler = async (argv) => {
   await fs.copyAsync(
     path.join(__dirname, '../../templates/.chiery'),
     chieryDir,
-    { clobber: argv.force }
+    { clobber: force }
   )
 
   log.info('done.')

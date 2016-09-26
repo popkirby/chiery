@@ -7,8 +7,13 @@ import replaceEnv from './replace-env'
 
 async function postInstall(cloverPath) {
   process.chdir(cloverPath)
+  let cloverfile
 
-  const cloverfile = jsonfile.readFileSync(path.join(cloverPath, './clover.json'))
+  try {
+    cloverfile = jsonfile.readFileSync(path.join(cloverPath, './clover.json'))
+  } catch(e) {
+    return
+  }
 
   // create symlink
   if ('link' in cloverfile) {
